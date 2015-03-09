@@ -1,6 +1,5 @@
-{% extends "forum/toolbar.html" %}
 {% block content %}
-  <h1>Login page</h1>
+  <h1>Register page</h1>
 
   {% if errors %}
   <p class="error">{{ errors }}</p>
@@ -24,7 +23,7 @@
        <td><input type="password" name="password" value="" id="password"></td>
       </tr>
       </table> 
-      <input type="submit" value="login" />
+      <input type="submit" value="register" />
       </form>
   {% endif %}
 {% endblock %}
