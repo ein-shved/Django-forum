@@ -5,6 +5,7 @@
   {% endif %}
 <h1>{{ topic.topic_header }}</h1>
 <h2>by {{ topic.publisher.username }}</h2>
+<p> at {{ topic.pub_date }} </p>
 <table border="1" style="width:100%">
     <tr><td>{{ topic.topic_text}}</td></tr>
 </table>
@@ -14,11 +15,13 @@
          <tr>
              <th>Reply</th>
              <th>Author</th>
+             <th>Publication date</th>
          </tr>
     {% for reply in topic.reply_set.all %}
         <tr>
             <td>{{ reply.reply_text }}</td>
             <td>{{ reply.publisher.username }}</td>
+            <td>{{ reply.pub_date }}</td>
         <tr>
     {% endfor %}
     </table>

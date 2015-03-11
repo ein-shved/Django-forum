@@ -7,9 +7,10 @@ class Topic(models.Model):
     publisher = models.ForeignKey(auth.models.User)
     topic_header = models.CharField(max_length = 256)
     topic_text = models.CharField(max_length = 2048)
+    pub_date = models.DateTimeField(default=timezone.now())
 
 class Reply(models.Model):
     topic = models.ForeignKey(Topic)
     publisher = models.ForeignKey(auth.models.User)
     reply_text = models.CharField(max_length = 512)
-
+    pub_date = models.DateTimeField(default=timezone.now())

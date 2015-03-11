@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from forum.models import Topic, Reply
 from django.views import generic
+from django.utils import timezone
 
 def index(request):
     if request.user is not None and request.user.is_active:
@@ -52,6 +53,8 @@ def register(request):
 class Forum(generic.ListView):
     template_name = 'forum/forum.html'
     model = Topic
+    def get_queryset(self):
+        return Topic.objects.order_by('-pub_date');
 
 class TopicView(generic.DetailView):
     template_name = 'forum/topic.html'
@@ -61,7 +64,10 @@ def reply(request, pk):
     if request.method == 'POST':
         topic = get_object_or_404(Topic, pk=pk)
         if request.user.is_authenticated():
-            reply = Reply(publisher=request.user, topic=topic, reply_text=request.POST['reply_text'])
+            reply = Reply(publisher=request.user,
+                          topic=topic,
+                          reply_text=request.POST['reply_text'],
+                          pub_date = timezone.now())
             reply.save()
             return HttpResponseRedirect(reverse('topic', args=(pk,)))
         else:
@@ -77,7 +83,8 @@ def create(request):
         if request.user.is_authenticated():
             topic = Topic(publisher=request.user,
                     topic_header=request.POST['topic_header'],
-                    topic_text=request.POST['topic_text'])
+                    topic_text=request.POST['topic_text'],
+                    pub_date=timezone.now())
             topic.save()
             return HttpResponseRedirect(reverse('forum'))
         else:

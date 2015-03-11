@@ -4,17 +4,19 @@
 
   {% if topic_list.count > 0 %}
      <p><a href="{% url 'create' %}">New topic</a></p>
-     <table border="1" style="width:40%">
+     <table border="1" style="width:100%">
          <tr>
              <th>Topic</th>
              <th>Author</th>
              <th>Replies</th>
+             <th>Publication date</th>
          </tr>
          {% for topic in topic_list %}
             <tr>
                 <td><a href="{% url 'topic' topic.id %}"> {{ topic.topic_header }}</a></td>
               <td>{{ topic.publisher.username }}</td>
               <td>{{ topic.reply_set.count }}</td>
+              <td>{{ topic.pub_date }}</td>
             </tr>
          {% endfor %}
      </table> 
