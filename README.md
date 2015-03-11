@@ -14,7 +14,7 @@ Check [this](https://docs.djangoproject.com/en/1.7/intro/tutorial01/#database-se
 ## Run
 
 Execute next to run the server
-<pre><code>pyhton manage.py runserver</code></pre>
+<pre><code>python manage.py runserver</code></pre>
 Check [this](https://docs.djangoproject.com/en/1.7/intro/tutorial01/#the-development-server) for more details.
 
 ## Connect
