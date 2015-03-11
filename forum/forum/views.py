@@ -3,6 +3,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from forum.models import Topic, Reply
+from django.views import generic
 
 def index(request):
     if request.user is not None and request.user.is_active:
@@ -19,7 +21,7 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
-        if user is not None: 
+        if user is not None:
             if user.is_active:
                 auth.login(request, user)
                 return HttpResponseRedirect(reverse('forum'))
@@ -47,5 +49,40 @@ def register(request):
         return render(request, 'forum/register.html')
 
 
-def forum(request):
-        return HttpResponse("Forum")
+class Forum(generic.ListView):
+    template_name = 'forum/forum.html'
+    model = Topic
+
+class TopicView(generic.DetailView):
+    template_name = 'forum/topic.html'
+    model = Topic
+
+def reply(request, pk):
+    if request.method == 'POST':
+        topic = get_object_or_404(Topic, pk=pk)
+        if request.user.is_authenticated():
+            reply = Reply(publisher=request.user, topic=topic, reply_text=request.POST['reply_text'])
+            reply.save()
+            return HttpResponseRedirect(reverse('topic', args=(pk,)))
+        else:
+            return render(request, 'forum/topic.html',
+                    {'errors': 'You can not reply as guest. Please, login first',
+                     'topic':topic})
+    else:
+        return HttpResponseRedirect(reverse('topic', args=(pk,)))
+
+
+def create(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated():
+            topic = Topic(publisher=request.user,
+                    topic_header=request.POST['topic_header'],
+                    topic_text=request.POST['topic_text'])
+            topic.save()
+            return HttpResponseRedirect(reverse('forum'))
+        else:
+            return render(request, 'forum/forum.html',
+                {'errors': 'You can not post as guest. Please, login first',
+                 'topic_list': Topic.objects.all})
+    else:
+        return render(request, 'forum/create.html')

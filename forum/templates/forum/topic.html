@@ -1,0 +1,35 @@
+{% extends "forum/toolbar.html" %}
+{% block content %}
+  {% if errors %}
+  <p class="error">{{ errors }}</p>
+  {% endif %}
+<h1>{{ topic.topic_header }}</h1>
+<h2>by {{ topic.publisher.username }}</h2>
+<table border="1" style="width:100%">
+    <tr><td>{{ topic.topic_text}}</td></tr>
+</table>
+{% if topic.reply_set.count > 0 %}
+    <h2>Replies</h2>
+     <table border="2" style="width:100%">
+         <tr>
+             <th>Reply</th>
+             <th>Author</th>
+         </tr>
+    {% for reply in topic.reply_set.all %}
+        <tr>
+            <td>{{ reply.reply_text }}</td>
+            <td>{{ reply.publisher.username }}</td>
+        <tr>
+    {% endfor %}
+    </table>
+<h2>Reply</h2>
+{% else %}
+<h2>There no replies on this topic. You can reply first</h2>
+{% endif %}
+<form action="{% url 'reply' topic.id  %}" method="post">
+     {% csrf_token %}
+     <textarea  rows="5" cols="50" name="reply_text" ></textarea><br>
+     <input type="submit" value="Reply" />
+</form>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "forum/toolbar.html" %}
+{% block content %}
+    <h1>New topic</h1>
+    <form action="{% url 'create' %}" method="post">
+        {% csrf_token %}
+        <label for="topic_header">Title:</label>
+        <input type="text" name="topic_header" value="" id="topic_header" size="37"><br>
+        <textarea rows="5" cols="50" name="topic_text"></textarea><br>
+        <input type="submit" value="Post topic">
+    </form>
+    
+{% endblock %}
